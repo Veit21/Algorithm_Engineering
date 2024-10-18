@@ -1,0 +1,45 @@
+##    Exam Assignments 07   ##
+
+1)  Erklären Sie drei 'vectorization clauses' Ihrer Wahl, welche mit
+    #pragma omp simd verwendet werden können.
+
+    'smidlen':  Dieser clause dient dazu, dem compiler eine Länge für die Vektoren
+      vorzugeben. Der Nachteil ist, dass eien falsche Wahl der Vektorlänge die
+      Performance des Codes negativ beeinflusst werden kann.
+    'safelen':  Gibt die maximale länge eines Vektors an, mit welcher die Schleife
+      fehlerfrei/sicher vektorisiert werden kann.
+    'reduction':  Führt eine Reduktion durch, wobei alle Elemente der 'list' mit
+      einer der Operationen {+, -, *, &, ^, &&, |, ||} auf eine Ergebnisvariable
+      zusammengefasst werden. Formell sieht der Befehl wie folgt aus:
+      reduction(reduction-identifier:list).
+
+
+2)  Geben Sie Gründe, welche für und gegen die Vektorisierung mit intrinsics
+    sprechen verglichen mit 'guided vectorization' mit OpenMP.
+
+    Die low-level Vektorisierung mit intrinsics erlaubt dem Programmierer mehr
+    Kontrolle über den Code und die Abläufe des Programms. Es ist außerdem möglich
+    Performance portablen Code zu generieren, was mit der guided vectorization
+    nicht funktioniert. Ein Nachteil von intrinsics ist, dass die Datentypen und
+    Funktionen für bestimmte Prozessorarchitekturen spezifisch sind. Das bedeutet,
+    dass die Portabilität des codes durch intrinsics eingeschränkt wird!
+    Der große Vorteil von 'omp simd' ist allerdings die Einfachheit der Nutzung.
+
+
+3)  Was sind die Vorteile von vector inctrinsics verglichen mit assembly code?
+
+    Ein sehr klarer Vorteil von intrinsics gegenüber assembly code ist die größere
+    'Intuition'. Intrinsics sind leichter zu lesen, verstehen, lernen und anzuwenden.
+    So sind z.B. explizite Zuweisungen von spezifischen Speicherregistern nicht
+    nötig, da die entsprechenden assemly Befehle durch intrinsics impliziert werden.
+    Intrinsics sind also 'wrapper' für die entsprechenden assemly Befehle.
+    Außerdem sind intrinsische Funktionen portabler bzgl. unterschiedlichen Compilern
+    und Betriebssystemen.
+
+
+4)  Welche sind die entsprechenden Vektoren der drei inctrinsics Datentypen
+    __m256, __m256d und __m256i?
+
+    __m256: Vektor mit 8 32bit floats
+    __m256d:  Vektor mit 4 64bit doubles
+    __m256i:  Vektor mit integers mit, oder ohne Vorzeichen

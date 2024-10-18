@@ -1,0 +1,71 @@
+##    Exam Assignments 09   ##
+
+1)  Wie unterscheiden sich 'bandwidth-bound' von 'compute-bound' Berechnungen?
+
+    'compute bound' bedeutet, dass bei Berechnungen die CPU der limitierende Faktor
+    ist und dessen Leistung vollständig ausgenutzt wird.
+    'bandwidth bound' auf der anderen Seite bedeutet, dass die Berechnungen durch
+    den Speicherzugriff limitiert werden. Die sogenannte Bandbreite, mit welcher
+    Daten zwischen Speicher und CPU transferiert werden können, ist dabei stark
+    begrenzend.
+
+
+2)  Erklären Sie, warum 'temporal locality' und 'spatial locality' die Performance
+    des Programms erhöhen.
+
+    Bei 'spatial locality' geht es darum, dass bei Datenzugriff nicht nur ein
+    Element der geladenen Daten verwendet wird, sondern möglichts auch Daten
+    in der 'direkten Nähe' des referenzierten Speicherortes. Vor allem mit unit
+    stride Speicherzugriff lassen sich chache lines effizient nutzen und Sprünge
+    im Speicher vermeiden.
+    Bei 'temporal locality' wird ausgenutzt, dass ein referenzierter Speicherbereich
+    nicht nur ein mal verwendet und unmittelbar wieder aus dem cache entfernt wird,
+    sondern in Zukunft weitere Male verwendet wird. Dies verhindert, dass gleiche
+    Daten mehrfach neu geladen werden müssen und steigert somit die Performance.
+    Eine Strategie um dies zu erreichen ist das 'blocking'.
+
+
+3)  Was sind die Unterschiede zwischen 'data-oriented design' und 'object oriented
+    design'?
+
+    Bei dem 'data-oriented design' steht im Vordergrund, dass die Daten möglichst
+    so strukturiert werden, wie sie letztendlich auch im Output auftreten. Dies
+    ermöglicht, dass die Funktionen, welche mit den Inputdaten arbeiten, die geringste
+    Arbeit verichten müssen, was Rechenleistung spart. Um dies zu erreichen ist es
+    von Vorteil das Problem rückwärts aufzurollen und immer im Blick zu halten, wie
+    die Outputdaten auszusehen haben.
+    Die Funktionen im DOD sind außerdem eher generalisiert und als Structure of
+    Arrays organisiert.
+
+
+4)  Was sind 'streaming stores'?
+
+    'streaming stores', oder auch 'non-temporal stores', ist ein Konzept, bei welchem
+    die caches während des Speicherungsprozesses übersprungen werden und die Daten
+    direkt in den RAM geschrieben werden. Dies kann zu einem Performancegewinn
+    führen, wenn die zu speichernden Daten nicht mehr verwendet/gelesen werden
+    bevor sie gespeichert werden, wenn die Daten nicht kurz nach dem Speichern wieder
+    benötigt werden, oder wenn z.B. große Arrays gespeichert werden müssen.
+
+
+5)  Beschreiben Sie eine typische cache Hierarchie, wie sie in Intel CPUs auftaucht.
+
+    Bei einer Intel CPU besitzt zunächst jeder Prozessorkern neben dem Register
+    einen aufgeteilten L1 cache. Dieser teilt sich auf in d- und i-chache, wobei
+    ersterer für die Daten zuständig ist und letzterer für die Instruktionen.
+    Zusätzlich besitzt jeder Kern außerdem einen L2 cache. Der L3 cache wird sich
+    allerdings von allen Prozessorkernen geteilt und ist direkt mit dem RAM, dem
+    Hauptspeicher verbunden.
+
+
+6)  Was sind 'cache conflicts'?
+
+    'cache conflicts' können auftreten, da der CPU cache wie eine hash Tabelle
+    funktioniert und somit Konflikte beim Zugriff auf bestimmte Speicherbereiche
+    möglich sind.
+    In der CPU cache können an jeder Position N cache lines gespeichert werden.
+    Wenn der Speicher nun in bestimmten Intervallen gelesen und beschrieben wird
+    und mehr cache lines als möglich pro Position gespeichert werden sollen, so
+    tritt 'thrashing' auf und bei jedem Zugriff wird eine cache line aus dem Speicher
+    entfernt bzw. fortlaufend überschrieben. Dies führt schließlich zu einem starken
+    Performanceverlust des Programms.

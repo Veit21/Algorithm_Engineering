@@ -1,0 +1,64 @@
+##    Exam Assignments 02    ##
+
+1)  Was verursacht "false sharing"?
+
+    Um "false sharing" zu verstehen, muss zunächst der Begriff "cache line" geklärt
+    werden. Bei einer cache line handelt es sich um die kleinste Speichereinheit (typischerweise 64 byte),
+    welche zwischen RAM und CPU cache transferiert werden kann.
+    Beim false sharing handelt es sich nun um ein Problem, bei welchem zwei oder mehr
+    Threads auf verschiedenen Prozessoren(Kernen) auf Variablen schreibend zugreifen,
+    welche auf der gleichen cache line liegen. Dadurch wird die cache line invalidiert
+    und das caching Protokoll erzwingt das Neuladen des Speichers, um die Gleichheit
+    des Speichers sicherzustellen.
+
+
+2)  Wie können "mutual exclusion constructs" race conditions verhindern?
+
+    Der Begriff "race condition" bezieht sich auf ein Problem das auftritt, wenn zwei
+    oder mehr Threads zugleich versuchen auf geteilte Daten/Variablen schreibend zuzugreifen.
+    Durch den zeitgleichen Zugriff auf z.B. eine Variable kann nicht gewährleistet werden,
+    dass die Änderungen aller Threads übernommen werden, wodurch z.B. das Ergebnis
+    einer Rechenoperation verfälscht werden kann.
+    Mutual exclusion constructs helfen insoweit, als dass Code in diesen "Bereichen" nur
+    durch einen Thread pro Zeiteinheit ausgeführt werden kann. Alle anderen Threads müssen
+    in der Zeit warten, bis diese exklusiven Zugriff auf den Code in diesem Konstrukt
+    erhalten.
+
+
+3)  Unterschied zwischen statischen und dynamischen schedules in OpenMP.
+
+    Der Unterschied zwischen diesen beiden schedules ist, dass bei "static" die Aufteilung
+    des workloads auf alle Threads während des Kompilierens geschieht und bei "dynamic"
+    wird der workload während der Laufzeit des Prozesses "in Echtzeit" aufgeteilt.
+    Der Vorteil von "static" ist die Geschwindigkeit. Ist der workload allerdings ungleich
+    verteilt, so kann dies dazu führen, dass Threads möglicherweise zwischendurch keine Arbeit
+    leisten. Bei "dynamic" wird etwas Geschwindigkeit eingebüßt, da die Aufteilung
+    während der Laufzeit passiert, doch bei einem unbalancierten workload können alle Threads
+    immer gleichmäßig ausgenutzt werden.
+
+
+4)  Was tun, wenn eine Lösung bereits gefunden wurde, aber der parallele for-loop noch
+    einige Iterationen übrig hat?
+
+    Eine parallel for Schleife kann leider nicht unterbrochen werden, allerdings gibt
+    es ein workaround, bei welchem weitere Arbeit nach Finden der Lösung vermieden
+    werden kann. Dies kann mit Hilfe einer bool'schen Variable gelöst werden, welche
+    "True" wird, sobald eine Lösung gefunden wurde. Mit einer Bedingung in der Schleife,
+    die erfüllt ist, sobald die oben genannte Variable "True" ist, werden die restlichen
+    Iterationen einfach fortgeführt, ohne weiteren Code auszuführen.
+
+
+5)  Wie funktioniert "std::atomic::compare_exchange_weak"?
+
+    Der oben genannte Ausdruck ist eine atomare Funktion, der zwei Argumente übergeben
+    werden. Zum einen ein Argument "expected" und zum anderen ein Argument "desired".
+    Diese Funktion wird auf eine atomare Variable angewendet und vergleicht den Wert
+    der Variablen mit dem "expected" Wert, welcher übergeben wird. Wenn die beiden
+    Werte übereinstimmen, so gibt die Funktion "True" zurück und die Variable wird
+    mit dem Wert "desired" überschrieben. Wenn sich der Wert der Variable und der "expected"
+    Wert unterscheiden, so wird "False" zurückgegeben und der aktuelle Wert der Variable
+    wird in "expected" geschrieben.
+
+6)  Coding Warmup: Welcher schedule erzeugt das gezeigte schlechte Muster?
+
+    schedule(static, 22), s. code 'schedule_clause.cpp'.

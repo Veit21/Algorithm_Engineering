@@ -1,0 +1,61 @@
+##    Exam Assignments 08   ##
+
+1)  Erklären Sie die Namenskonventionen für intrinsics functions
+    (_<vector_size>_<operation>_<suffix>).
+
+    <vector_size>: 'mm' steht für 128bit Vektoren (SSE), 'mm256' für 256bit Vektoren
+      (AVX, AVX2) und 'mm512' für 512 bit Vektoren.
+
+    <operation>:  Beschreibt die Operation, welche die intrinsics Funktion ausführt,
+      z.B. abs, add, avg etc.
+
+    <suffix>: Beschreibt den Datentypen der Argumente der Funktion. 'ps' steht für
+      float, 'pd' für double und ep<int_type> (8bit, 16bit, 32bit, 64bit) für integer.
+      'epi32' steht für 32bit integer mit Vorzeichen, 'epu16' steht für 16bit integer
+      ohne Vorzeichen.
+
+
+2)  Was verraten die Metriken 'latency' und 'throughput' über die Performance
+    einer intrinsics function?
+
+    Die beiden Metriken enthalten Informationen über die Performance einer intrinsic
+    Funktion. Die 'latency' ist die Anzahl an Taktzyklen, nach welchen das Ergebnis
+    einer Funktion zu Verfügung steht und für weitere Berechnungen verwendet werden
+    kann. Der 'throughput' beschreibt wie viele Zyklen benötigt werden, bis die
+    nächste intrinsic Funktion des gleichen Typen gestartet/ausgeführt werden kann.
+
+
+3)  Wie realisieren moderne Prozessoren instruction-level Parallelismus?
+
+    Instruction-level Parallelismus bedeutet, dass mehrere Instruktionen auf einem
+    Prozessorkern simultan ausgeführt werden können. Dies ist nicht mit SIMD zu
+    verwechseln, da dort nur eine Instruktion auf mehrere Elemente eines Vektors
+    angewendet wird.
+    Instruction-level Parallelismus wird bei modernen Prozessoren über einen sog.
+    Scheduler geregelt. Dieser besitzt mehrere Ports, die jeweils eine sog.
+    functional unit bedienen. Pro Taktzyklus kann der Scheduler also über die
+    verschiedenen Ports Mikrooperationen an die jeweiligen functional units
+    übergeben und somit auf einem CPU Kern simultan mehrere Instruktionen starten.
+
+
+4)  Wie könnte loop unrolling die Ausführungszeit von kompiliertem Code
+    beeinflussen?
+
+    Beim loop unrolling wird der body einer for-Schleife kopiert und die Anzahl
+    an Iterationen entsprechend angepasst, um instruction level Parallelismus
+    auszunutzen (..mehrere Instruktionen pro Taktzyklus eines CPU Kerns).
+    Wichtig ist zu beachten, dass die Kompilierzeit und der benötigte Speicher
+    dadurch steigen kann. Die Ausführungszeit ist auch sehr von dem verwendeten
+    Compiler abhängig und kann u.U. sogar die Performance negativ beeinflussen.
+    Eine performance portable Lösung ist die Benutzung von vector intrinsics, so
+    läuft der Code auf allen Compilern schneller.
+
+
+5)  Was bedeutet eine hohe IPC (instructions per cycle) in Bezug auf die Performance
+    eines Algorithmus?
+
+    Die IPC erhält man, wenn die Anzahl der Instruktionen für einen Algorithmus
+    durch die Zahl der Zyklen (CPU cycles) geteilt wird. Eine hohe IPC bedeutet
+    also, dass die CPU effizient genutzt und ein hoher instruction-level
+    Parallelismus erreicht wird. Diese Zahl sagt allerdings nichts über die
+    Effizienz des Algorithmus/Codes selber aus!

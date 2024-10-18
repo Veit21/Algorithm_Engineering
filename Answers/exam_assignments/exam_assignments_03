@@ -1,0 +1,112 @@
+##    Exam Assignments 03    ##
+
+1)  Wie funktioniert der "ordered" clause in OpenMP in Zusammenhang mit einer parallelen
+    for-Schleife?
+
+    Durch den "ordered" clause wird im code signalisiert, dass der nachfolgende Bereich
+    wieder sequenziell ausgeführt werden muss. Die Reihenfolge der Iterationen stimmt
+    dabei mit der einer normalen (nicht-parallelen) for-Schleife überein.
+
+
+2)  Wofür ist der "collapse" clause in OpenMP gut?
+
+    Der "collapse" clause wird benötigt, wenn man verschachtelte for-Schleifen
+    parallelisiern möchte. Durch diesen Ausdruck werden die verschachtelten Schleifen
+    wie eine große parallele Schleife behandelt.
+    Wird der "collapse" clause weggelassen, so wird nach dem Ausdruck "#pragma omp parallel for"
+    nur die äußerste Schleife parallelisiert und die restlichen, verschachtelten
+    Schleifen werden weiterhin sequenziell ausgeführt.
+
+
+3)  Erkläre, wie "reductions" in OpenMP funktionieren.
+
+    "Reductions" werden verwendet, um viele Werte zu einem Ergebnis zusammenzufassen.
+    Dabei kann das Ergebnis durch mehrere verschieden Operationen (op) berechnet werden,
+    wie z.B. durch Addition, Subtraktion, Multiplikation, Division, Minimum oder Maximum
+    etc.
+    Soll ein Ergebnis auf eine globale Variable geschrieben werden, so wird durch
+    reduce(op:list) zunächst eine lokale Kopie der list Variablen erzeugt, die unabhängig
+    von den anderen Threads stetig geupdated werden kann. Schließlich werden die
+    lokalen Kopien der Liste auf allen Threads "zusammengefasst" (addiert, multipliziert,...)
+    und am Ende wird die ursprüngliche globale Variable aus den Ergebnissen aller Threads
+    berechnet.
+
+
+4)  Was bewirkt eine "barrier" bei paralleler Programmierung?
+
+    Eine Barriere ist eine Stelle im Code, welche nicht überschritten werden kann,
+    sobald nicht alle anderen Threads ebenfalls diese Barriere erreicht haben (sprich:
+    Den Code vor der Barriere ausgeführt haben).
+    Manche Funktionen in OpenMP besitzen implizite Barrieren, welche also nicht explizit
+    durch den Programmierer im Code gesetzt werden. Zu diesen Funktionen gehören
+    "for", "sections", "single" und "parallel".
+
+
+5)  Erkläre die Unterschiede zwischen den Routinen "omp_get_num_threads()",
+    "omp_get_num_procs()" und "omp_get_max_threads()".
+
+    Die Routine "omp_get_max_threads()" gibt die Anzahl der aktiven Threads zurück.
+    Außerhalb einer parallelen Region liegt dieser Wert immer bei 1 und innerhalb
+    einer parallelen Region kann dieser maximal die Anzahl aller möglichen Threads
+    der verbauten CPU zurückgeben.
+    Die Routine "omp_get_num_procs()" gibt die Anzahl der logischen Kerne der CPU
+    zurück. Ist eine CPU zu "hyperthreading" fähig, so ist die Anzahl der logischen Kerne
+    das Produkt aus der Anzahl der physischen Kerne und der Anzahl an Threads, die
+    pro Kern ausgeführt werden können. Diese Zahl kann auch außerhalb der parallelen
+    Region zurückgegeben werden.
+    Die Routine "omp_get_max_threads()" funktioniert ähnlich wie "omp_get_num_threads()"
+    und gibt innerhalb der parallelen Region die maximale Anzahl der Threads zurück.
+
+
+6)  Erläutere, inwiefern sich die Attribute "private" und "firstprivate" voneinander
+    unterscheiden.
+
+    Mit den Attributen "private" und "firstprivate" lassen sich lokale Kopien einer
+    globalen Variablen erzeugen und einer parallelen Region übergeben. Der Vorteil
+    von lokalen Kopien ist, dass diese von jeden Thread bearbeitet werden können
+    und die originale globale Variable wird dabei nicht verändert.
+    Der Unterschied zwischen den beiden Attributen liegt nun darin, dass "private"
+    eine nicht-initialisierte Kopie der globalen Variable erzeugt und durch "firstprivate"
+    eine lokale Kopie erzeugt wird, die mit dem Wert des globalen Originals initialisiert
+    wird.
+
+
+7)  Beschreibe in Pseudocode, wie die Berechnung von Pi nur mit Hilfe von einfachen
+    threads parallelisiert werden kann.
+
+    integrate_over_part(global_sum) {
+      for (x in range(steps)) {
+
+          // calculate f(x) for part of interval, depending on how many threads
+          // are used by the system
+          // make sure to not let threads interfere!
+          global_sum += f(x);
+      }
+    }
+
+    main() {
+
+      // initialize all constants
+      steps = 100000;
+      global_sum;
+      width;
+      num_system_threads;
+
+      // fork the threads
+      for (thread in num_system_threads) {
+
+          // every thread integrates over a part of the whole interval
+          thread(integrate_over_part(global_sum))
+      }
+
+      // let master thread do integration too
+      integrate_over_part(global_sum)
+
+      // join threads again
+      for (thread in num_system_threads) {
+          thread.join()
+      }
+
+      // do additional calculations for correct Pi
+      // finished
+    }

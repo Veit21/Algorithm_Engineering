@@ -1,0 +1,49 @@
+##    Exam Assignments 10   ##
+
+1)  Nenne und erkläre compiler flags, welche nützlich sind während der Entwicklung.
+
+    -Wall:  Schaltet alle Warnungen des Compilers ein.
+
+    -g: Erzeugt debug Informationen, welche schließlich von einem debugger, oder
+        profiler genutzt werden können. Die binary kann z.B. von GDB debugged werden.
+
+    -fsanitize=address: Ermittelt memory-leaks (wenn vorher allozierter Speicher
+        nicht wieder befreit wird), use-after-free (wenn der pointer eines bereinigten
+        Speicherbereiches nicht gelöscht wird) und out-of-bound access (wenn z.B.
+        auf ein 4. Element in einem Array der Größe 3 zugegriffen wird).
+
+    -fsanitize=undefined: Entdeckt undefiniertes Verhalten zur Laufzeit.
+
+
+2)  Wie kann Intel oneAPI dabei helfen besseren code zu schreiben?
+
+    Die Intel oneAPI beinhaltet z.B. den Intel Inspector, welcher threading und
+    memory correctness prüft. Vor allem bei multithreaded Anwendungen ist dieses
+    Tool praktisch, um deadlocks (zwei threads warten auf Resourcen, die aber von
+    dem jeweils anderen thread noch blockiert werden) und data races (mehrere threads
+    greifen zugleich auf einen Speicherbereich zu und verursachen fehlerhafte updates)
+    zu finden und sogar zu lokalisieren.
+
+    Auch der Intel VTune Amplifier ist Teil der oneAPI. Dieses Tool kann viele
+    performance Metriken auslesen und ausgeben, z.B. die cycles per instruction,
+    thread concurrency, erreichte Speicherbandbreite etc. Es können außerdem
+    schnell jene Bereiche in dem Quellcode gefunden werden, welche die meiste Zeit
+    benötigen (sog. hotspots). Die Genauigkeit kann dabei bis auf eine Zeile Code
+    erhöht werden, wenn die Daten dies zulassen! Auf diese Weise lässt sich ein
+    Programm noch effektiv beschleunigen.
+
+
+3)  Was kann man von dem folgenden Zitat lernen: "Premature optimization is the
+    root of all evil" (Donald Knuth)?
+
+    Das Zitat lehrt uns, dass man seinen Code nicht einfach blind, oder ungerichtet
+    optimieren soll, sondern zunächst messen, profilen und hotspots finden soll,
+    um an diesen Stellen gezielt anzusetzen und dann effizient zu optimieren.
+    Wenn man blind versucht den Code zu optimieren kann dies zunächst vor allem
+    viel Zeit in Anspruch nehmen. Außerdem ist dabei gar nicht bekannt, ob die
+    zu optimierende Stelle überhaupt die Performance des Programmes stark beeinflusst.
+    Es kann also wertvolle Zeit verschwendet werden.
+    Auf der anderen Seite kann eine unbedachte Optimierung dazu führen, dass der
+    Code am Ende gar nicht mehr funktionsfähig ist.
+    Unterm Strich sollten Änderungen kurz und simpel gehalten werden und sind
+    manchmal vielleicht sogar überhaupt nicht notwendig!

@@ -1,0 +1,15 @@
+{
+  "io": {
+    "input_path": "/Users/veithucke/Documents/Veit/Studium/Master/Semester3/AlgoEngi/Project/data/input/Datasaurus_data.csv",
+    "output_path": "/Users/veithucke/Documents/Veit/Studium/Master/Semester3/AlgoEngi/Project/data/output/image_data.csv",
+    "animation_path": "/Users/veithucke/Documents/Veit/Studium/Master/Semester3/AlgoEngi/Project/data/output/simulated_annealing.gif"
+  },
+  "parameters": {
+    "shape" : "Circle",
+    "iterations": 100000,
+    "min_temperature": 0.01,
+    "max_temperature": 0.4,
+    "allowed_distance": 2.0,
+    "additional_shake": 0.2
+  }
+}

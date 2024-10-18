@@ -1,0 +1,28 @@
+##    Exam Assignments 05   ##
+
+1)  Was ist CMAKE?
+
+    CMake (cross-platform make) ist ein build file generator. Mit Hilfe dieser build
+    files kann das Projekt schileßlich von einem compiler kompiliert werden. Durch
+    CMake kann z.B. festgelegt werden, welche weiteren Bibliotheken inkludiert werden
+    sollen, oder ob Optimierungen durch den compiler vorgenommen werden sollen etc.
+    Man kann mit CMake ein Projekt allerdings nicht nur 'builden', sondern auch
+    testen (ctest), oder 'packen' (cpack).
+
+
+2)  Welche Rolle spielen "targets" in CMAKE?
+
+    Tagets sind jene Bibliotheken und executables, die durch CMake erstellt werden.
+
+
+3)  Wie würden Sie vorgehen, um Code zu optimieren?
+
+    An erster Stelle steht zunächst das (naive) Lösen des Problems. Wenn das Programm
+    den gewünschten Zweck erfüllt, kann es mit Hilfe von Tests auch auf Fehler überpüft
+    und ggf. angepasst werden. Sobald sichergestellt ist, dass alles Fehlerfrei
+    funktioniert, so kann die performance betrachtet werden: Ist die Laufzeit schon
+    in einem gewünschten/angemessenen Rahmen, so kann das Problem als gelöst betrachtet
+    werden. Andernfalls sollte der Code weiter optimiert werden, z.B. indem er
+    parallelisiert und vektorisiert wird und bottlenecks aufgespürt werden. Schließlich
+    wird wieder evaluiert, ob die Performance danach die Erwartungen erfüllt und
+    ggf. wird diese Optimierungsschleife wiederholt, bis dies der Fall ist.

@@ -1,0 +1,134 @@
+##    Exam Assignments 01    ##
+
+1)  Unterschied zwischen "parallelism" und "concurrency"
+
+    Concurrency beschreibt die Eigenschaft eines Systems, mehrere Aktionen zeitgleich
+    ausführen zu können. Dies bedeutet allerdings nicht zwangsläufig, dass die Aktionen
+    auch (echt) parallel ausgeführt werden! Manchmal erscheint es, dass Aktionen
+    parallel ausgeführt werden, aber tatsächlich findet "context-switching" statt,
+    wobei der Prozessor immer zwischen den einzelnen Prozessen wechselt und jeweils
+    nur Teile eines Prozesses ausführt.
+    Parallelismus ist eine Unterkategorie von concurrency und beschreibt, dass mehrere
+    Aktionen simultan ausgeführt werden können.
+
+2)  Fork-join Parallelismus
+
+    Es existiert ein Master thread, der eine Gruppe weiterer threads erzeugt, wenn
+    der Prozess an der Stelle parallelisiert werden kann. Sobald der parallele
+    Teil der Prozesses ausgeführt wurde, werden die threads wieder vereint und der
+    Prozess wird auf dem Master thread wieder sequenziell ausgeführt, bis die nächste
+    parallele Region auftaucht.
+
+3)  Computer Systems: A Programmer's Perspective - Kapitel 1 Diskussion.
+
+    Ich finde es bereits sehr erstaunlich, wie komplex moderne Computer aufgebaut
+    sind und wie viele Komponenten miteinander korrekt in kürzester Zeit kommunizieren
+    müssen, um ein stabiles System zu ergeben und unsere täglichen Aufgaben so
+    selbstverständlich zu erfüllen. Von der Ebene des Betriebssystems, über die
+    Verarbeitung von I/O verschiedenster Quellen, der Funktionsweise und Aufbau
+    des Speichers und der CPU, bis hin zu Konzepten wie Parallelismus (auf Hardware-
+    und Datenebene) ist es sehr spannend die einzelnen Aspekte eines Computers
+    zu beleuchten und auch deren Entwicklung über die Jahrzehnte zu betrachten.
+    Besonders interessant finde ich dabei allerdings die Funktionsweise des
+    Compilersystems, da dies ein so fundamentales Konzept in der Programmentwicklung
+    und effizienten Nutzung des PCs darstellt.
+    Zunächst ist da der Fakt, dass es nicht 'einen' Compiler für z.B. C++ gibt,
+    sondern mehrere, die unterschiedliche Ergebnisse liefern können
+    (GCC, Intel Compiler, Clang etc.). Des weiteren handelt es sich dabei auch nicht
+    um ein Programm, sondern eigentlich um vier (preprocessor, compiler, assembler,
+    linker), die erst durch ein Zusammenspiel eine ausführbare Datei generieren
+    und als 'compilation system' bekannt sind.
+    Auf jeder Ebene der Pipeline, beginnend bei der source Datei, welche den
+    Quellcode enthält und endend bei der 'binary', welche vom Computer schließlich
+    ausgeführt werden kann, greift je ein Element des compilation systems ein und
+    verändert die Datei etwas, wie an einem Fließband.
+    Zunächst wird die Quelldatei vom preprocessor etwas modifiziert, denn es müssen
+    die Direktiven, welche am Anfang mit '#' definiert wurden, eingebunden werden.
+    Anschließend übersetzt der Compiler den Quellcode in eine low-level Maschinen-
+    sprache, der Assemblysprache. Interessanterweise übersetzen verschiedene Compiler
+    den Quellcode verschiedener Programmiersprachen in gleichen Assemblycode, diese
+    Sprache hat also eine gewisse Universalität!
+    Im nächsten Schritt übersetzt der Assembler den Assemblycode (in Textform) in
+    eine Binärsprache, welche die Instruktionen für den PC enthält/codiert. Schließlich
+    müssen auf dieser Ebene noch Funktionen z.B. aus der C Standardbibliothek (oder
+    anderen) hinzugefügt werden, da diese nicht explizit in der originalen Quelldatei
+    definiert wurden. Dafür gibt es einen Linker, welcher auf weitere vor-
+    kompilierte Dateien zugreifen kann und diese verknüpfen kann, um eine ausführbare
+    Datei zu erstellen.
+    Zusammengefasst denke ich, dass es äußerst interessant ist, wie die Übersetzung
+    einer eher 'menschlichen' Sprache in eine vom Computer verständliche Sprache
+    funktioniert und welche Prozesse dafür im Hintergrund gestartet werden und
+    präzise zusammenarbeiten müssen.
+    (Besonders mit Blick auf die Funktion einer IDE wie CLion ist es spannend, da
+    dort fast nur noch ein grüner Pfeil geklickt werden muss und die Kompilierung
+    und Ausführung der erstellten binary erfolgt in sekundenschnelle vollkommen
+    automatisch, ohne, dass der Nutzer etwas von den Prozessen erfährt.)
+
+
+
+4)  There's plenty of room at the Top: What will drive computer performance after
+    Moore's law? - Erklärung der Abbildung.
+
+    Die Abbildung 'Performance gains after Moore's law ends.' stellt grafisch dar,
+    inwiefern die Leistung der Computer weiterhin verbessert werden kann, nachdem
+    Moore's law keine Gültigkeit mehr hat.
+    Die Grafik kann zunächst grob in zwei Segmente unterteilt werden, 'The Bottom',
+    welche im unteren Teil der Abbildung zu sehen ist und 'The Top', welche den
+    oberen Teil einnimmt. Ein klarer Fokus liegt dabei auf dem Segment 'The Top',
+    da dort alle wichtigen Aussagen, die mit dieser Abbildung vermittelt werden
+    sollen, zusammengefasst sind. Dieser Teil ist wie eine Tabelle aufgebaut, wobei
+    die drei Technologien, welche in dem Paper detailliert diskutiert werden, klar
+    hervorgehoben werden. Bei den dargestellten Technologien handelt es sich um
+    Software, Algorithmen und Hardware Architekturen. In den Zeilen unterhalb der
+    jeweiligen Technologien sind zunächst die Möglichkeiten, welche verfolgt werden
+    können und ein konkretes Beispiel aufgeführt.
+    Grundlage der Forschung an neuen Technologien, welche die Performance von Computern
+    unabhängig von Moore's law weiter verbessern sollen, ist das Erreichen physikalischer
+    Grenzen bei der Produktion von Halbleitern. Für Jahrzehnte konnten Transistoren
+    durch immer fortgeschrittenere Verfahren verkleinert werden, wodurch die Fläche
+    einer CPU effizienter genutzt werden konnte, was automatisch einen Leistungsgewinn
+    bedeutete. Dieser Trend kann in naher Zukunft allerdings nicht weiter verfolgt
+    werden, wodurch Alternativen auf Soft- und Hardwareebene geschaffen werden müssen.
+    Zunächst ist da die Softwareebene:
+    Da oft die Entwicklungszeit eines Programms minimiert werden sollte, lag der Fokus
+    eines Projektes darauf, es möglichst schnell zu entwickeln, was allerdings zu
+    ineffizienten Code führte. Dieses Problem des 'software bloating' kann durch
+    Anpassung des Codes bereits gelöst werden. Auch die Verwendung anderer Programmier-
+    sprachen kann bereits die Performance eines Programmes stark fördern. Das Wechseln
+    von Python auf Java, oder sogar C/C++ birgt das Potenzial den Code um Faktor
+    10-50 (abh. vom Problem natürlich) zu beschleunigen, da weniger Operationen von
+    der CPU ausgeführt werden müssen. Des Weiteren kann durch angepasste Software
+    auch die zugrunde liegende Hardware effizienter ausgenutzt werden. Vor allem
+    das Berücksichtigen von Cache-Hierarchien, Parallelismus und Vektorisierung
+    kann ein Programm enorm beschleunigen.
+    Eine weitere Ebene ist die der Algorithmen:
+    Um ein (z.B. naturwissenschaftliches) Problem mit dem Computer zu lösen, muss
+    ein passender Algorithmus existieren/entwickelt werden, der ein korrektes Ergebnis
+    liefern kann. Die Performance existierender Algorithmen hat Jahrzehnte durch
+    Moore's law profitiert, weshalb es für bekannte Probleme kaum Bedarf nach
+    neuen Algorithmen gab. Nun können Prozesse beschleunigt werden, indem an neuen
+    Algorithmen geforscht wird, was allerdings nur selten zu positiven Ergebnissen
+    führt. Großes Potenzial bieten da neue Problemgebiete, wie Machine Learning etc.,
+    welche erst seit wenigen Jahren stark an Popularität gewonnen haben und somit auch
+    für die Industrie interessant geworden sind und deshalb auch mehr Forschung
+    betrieben wird. Zudem bieten neue mathematische Modelle die Möglichkeit gezielt
+    effizientere Algorithmen zu implementieren, was allerdings ebenfalls sehr schwierig
+    ist, da jedes Modell oft nur ein Aspekt der Hardware betrachtet, für eine gute
+    Umsetzung allerdings alle Aspekte vereint berücksichtigt werden müssen.
+    Zuletzt bietet auch die Ebene der Hardware Potenzial:
+    Ein großes Thema ist dabei die Vereinfachung eines Prozessorkerns. Wenn es gelingt
+    den Kern so ebenfalls zu verkleinern, bleibt mehr Fläche auf dem Chip für weitere
+    Prozessorkerne. Diese müssen wiederum durch passende Algorithmen/Software
+    ausgenutzt werden, um den größtmöglichen Nutzen daraus zu ziehen. Des weiteren
+    kann es sehr Profitabel sein, Hardware speziell für unterschiedliche Anwendungen
+    zu designen und so verschiedene Aufgaben geschickt zu verteilen. Hardware, welche
+    effizient auf nur eine oder wenige Aufgaben angepasst ist, benötigt nur eine
+    Architektur für diese Aufgabe und kann so viele Transistoren sparen und trotzdem
+    weitaus schneller performen als es eine gewöhnliche CPU könnte. Das berühmteste
+    Beispiel ist die GPU, welche besonders effizient Aufgaben der linearen Algebra
+    lösen kann, also von sehr hoher Parallelität der Aufgaben profitiert und deshalb
+    speziell für grafische Anwendungen genutzt werden kann. Im kompilieren z.B.
+    sind GPUs dafür quasi nicht zu gebrauchen.
+    Alles in allem gibt es viele Möglichkeiten die Leistung von Computern in der Zeit
+    nach Moore's law zu beschleunigen, doch dies benötigt viel know how, Zeit und
+    vor allem die Bereitschaft zu forschen und diminishing returns zu berücksichtigen.

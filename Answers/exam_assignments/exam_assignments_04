@@ -1,0 +1,68 @@
+##    Exam Assignments 04   ##
+
+1)  Erkläre, wie "divide and conquer" Algorithmen mit Hilfe von "tasks" aus OpenMP
+    parallelisiert werden können.
+
+    Der "divide and conquer" Algorithmus kann beschleunigt werden, indem für jedes
+    (rekursive) Aufrufen der Funktion ein Task erstellt wird. Dieser wird dann der
+    "Task queue" hinzugefügt und kann dann dynamisch von einem freien CPU Kern
+    abgearbeitet werden.
+
+
+2)  Beschreibe Möglichkeiten, wie "merge sort" beschleunigt werden kann.
+
+    Zunächst kann für kleine Arrays (z.B. < 32) ein simpler insertion sort Algorithmus
+    verwendet werden, da dieser für kleine Arrays bereits effizient arbeitet und
+    keinen zusätzlichen Speicherplatz benötigt.
+    Das Sortieren kann außerdem parallelisiert werden, indem tasks verwedendet werden,
+    um das Aufteilen der Arrays auf mehrere Kerne zu verlagern (s.o.).
+    Schließlich lässt sich auch ein extra Speicher, ein "buffer", verwenden, um
+    mehrere Kopierverfahren zu vermeiden.
+
+
+3)  Welche Idee steckt hinter "multithreaded merging"?
+
+    Die Motivation von "multithreaded merging" ist, zwei bereits sortierte
+    Arrays zusammenzuführen zu einem größeren, sortierten Array. Dies soll zudem
+    parallel ablaufen.
+    Zunächst wird dabei der Median aus dem größeren Array herausgeschrieben, da dieser
+    als Orientierung für die Sortierung dienen soll. In dem kleineren Array werden
+    schließlich alle Werte, die kleiner als der Median sind, gesucht und so entstehen
+    jeweils zwei "Subarrays" mit Werten kleiner bzw. größer als der Median. Dadurch
+    ist es dann möglich jeweils unabhängig die Subarrays mit den kleineren Werten,
+    und die Subarrays mit den größeren Werten zu mergen. Durch die Unabhängigkeit
+    der Subarrays kann dies auch auf unterschiedlichen threads geschehen.
+    Die Sortierung der jeweiligen Subarrays lässt sich dann ebenfalls rekursiv
+    implementieren, indem wieder der Median des größeren Subarrays gesucht wird etc.
+
+
+4)  What every systems programmer should know about concurrency - Diskussion zweier
+    interessanter Aspekte.
+
+    Atomicity:
+
+    Ich finde das Konzept von atomaren Datentypen insoweit interessant, als dass sie,
+    wie in der "echten" Welt, etwas unteilbares darstellen. Über Probleme mit simultanem
+    Lesen/Schreiben einer Variable muss man sich beim "klassischen" sequenziellen Programmieren
+    keine Gedanken machen, deshalb ist es durchaus wichtig achtsam zu sein und geteilte Variablen
+    atomar definieren. Besonders spannend finde ich, dass sogar Unterschiede zwischen 64 bit und
+    32 bit Maschienen bestehen können. Das genannte Beispiel des torn read and write mit 64 bit Daten
+    wird heutzutage sicher keine weite Verbeitung mehr haben, allerdings ist es durchaus nicht
+    trivial auf diese Probleme zu achten, denn Fehler solcher Art äußern sich vermutlich nicht
+    durch Abbruch der Ausführung, oder einen Compiler Error, sondern eher subtiler durch ein
+    schlicht falsches Ergebnis.
+
+    Weakly- and strogly-ordered hardware:
+
+    Mir war vorher bereits bewusst, dass CPUs nicht immer vollkommen gleich aufgebaut sind und vor
+    allem die Architekturen X64 und ARM voneinander unterschieden werden. Bedenkt man allerdings, dass
+    Computer auf Basis von ARM X64 Anwendungen emulieren müssen, um problemlos ausgeführt zu werden, so
+    bemerkt man bereits, dass grundsätzliche Unterschiede zwischen den Architekturen bestehen.
+    Spannend finde ich, dass es sich bei ARM um sogenannte weakly-ordered Hardware handelt, wobei nicht
+    davon ausgegangen werden kann, dass loads und stores in der richtigen Reihenfolge ausgeführt werden!
+    Die Ausführung in der richtigen Reihenfolge muss durch memory barriers sichergestellt werden.
+    Auf der Ebene der Programmiersprache, oder soagar des gesamten Betriebssystems ist es unvorstellbar,
+    dass Anweisungen plötzlich in der falschen Reihenfolge ausgeführt werden. Eine einwandfreie
+    Nutzung des Computers könnte nicht mehr richtig gewährleistet werden, doch durch gezielte Kommandos
+    auf Ebene des Assemblers wird dieses Problem wieder behoben und das ist wegen der subtilen Natur sehr
+    faszinierend.

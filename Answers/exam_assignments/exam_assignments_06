@@ -1,0 +1,45 @@
+##    Exam Assignments 06   ##
+
+1)  Nenne Eigenschaften der instruction sets SSE, AVX(2) und AVX-512.
+
+    Bei den instruction sets SSE, AVX(2) und AVX-512 handelt es sich um Vektor
+    instruction sets. Sie erlauben das Ausführen gleichartiger Rechenoperation auf
+    mehrere zur verfügung stehende Daten gleichzeitig. Es handelt sich also um eine
+    Parallelisierung auf Datenebene.
+    Bei SSE beträgt die Breite des Speicherregisters 128 bit (erkennbar durch "xmm"
+    im Assemblercode). Es können also z.B. 4 floats in einem Register gespeichert
+    werden. (?)
+    AVX(2) erweitert den Bereich auf 256 bit ("ymm") und AVX-512 ("zmm") sogar auf
+    512 bit. Moderne CPUs unterstützen mindestens AVX2 und manchmal (v.A. Intel CPUS)
+    sogar AVX-512.
+
+
+2)  Wie kann memory aliasing die Performance beeinflussen?
+
+    Memory aliasing beschreibt den Umstand, dass zwei Zeiger auf den selben Bereich
+    im Speicher zeigen. Aus Sicherheitsgründen geht der Compiler per default davon
+    aus, dass zwei pointer aliased sind. Wird im Code also nicht ausdrücklich definiert,
+    dass referenzierte Speicherbereiche restricted sind, so kann der compiler keine
+    automatischen Optimierungen, wie das Vektorisieren, durchführen und das
+    beeinflusst die Laufzeit negativ.
+
+
+3)  Was sind die Vorteile von unit stride Speicherzugriff verglichen mit dem
+    Zugriff mit größeren strides?
+
+    Wenn auf Speicherbereiche in einem regelmäßigen Abstand zugegriffen wird, so
+    nennt man dieses Muster "strided". Ein unit stride, also der Zugriff auf direkt
+    benachbarte Elemente im Speicher, sollte bevorzugt werden, da so die zur Verfügung
+    stehende Bandbreite zwischen CPU und Speicher effizienter genutzt werden kann.
+    Wenn eine Cache Line aus dem Speicher ausgelesen/verwendet wird, so werden die
+    64 byte bei stride 1 optimal verwendet. Außerdem kann der compiler so den Code
+    leichter Vektorisieren.
+
+
+4)  Wann würden Sie es bevorzugen Einträge (records) im Speicher als Structure of
+    Arrays anzuordnen?
+
+    Ein Structure of Arrays könnte schneller sein, wenn Daten z.B. eines Data Frames
+    Spaltenweise verarbeitet werden müssen. In diesem Fall könnten die einzelnen
+    Spalten als separate Arrays zusammengefasst werden und Rechenoperationen parallel
+    ausgeführt werden. Die Bandbreite wird dabei optimal ausgenutzt.

@@ -1,0 +1,60 @@
+This is BibTeX, Version 0.99d
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: paper.aux
+Reallocating 'name_of_file' (item size: 1) to 21 items.
+The style file: ACM-Reference-Format.bst
+Reallocating 'name_of_file' (item size: 1) to 11 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'wiz_functions' (item size: 4) to 6000 items.
+Database file #1: literature.bib
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'glb_str_end' (item size: 4) to 20 items.
+Reallocating 'glb_str_ptr' (item size: 4) to 20 items.
+Reallocating 'global_strs' (item size: 1) to 4000000 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Warning--no journal in kirkpatrick1995simulated
+Warning--no number and no volume in kirkpatrick1995simulated
+Warning--page numbers missing in both pages and numpages fields in kirkpatrick1995simulated
+You've used 7 entries,
+            5981 wiz_defined-function locations,
+            1685 strings with 21670 characters,
+and the built_in function-call counts, 8012 in all, are:
+= -- 1138
+> -- 203
+< -- 0
++ -- 70
+- -- 101
+* -- 488
+:= -- 754
+add.period$ -- 35
+call.type$ -- 7
+change.case$ -- 40
+chr.to.int$ -- 7
+cite$ -- 10
+duplicate$ -- 691
+empty$ -- 485
+format.name$ -- 111
+if$ -- 1990
+int.to.chr$ -- 2
+int.to.str$ -- 1
+missing$ -- 25
+newline$ -- 112
+num.names$ -- 49
+pop$ -- 239
+preamble$ -- 1
+purify$ -- 96
+quote$ -- 0
+skip$ -- 264
+stack$ -- 0
+substring$ -- 603
+swap$ -- 78
+text.length$ -- 19
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 140
+warning$ -- 3
+while$ -- 61
+width$ -- 0
+write$ -- 189
+(There were 3 warnings)

@@ -1,0 +1,123 @@
+##    Exam Assignments 13   ##
+
+1)  Grenzen Sie die folgenden Teile einer SSD voneinander ab: Cells, Pages, Blocks.
+
+    Eine Zelle/Cell ist die kleineste Einheit der SSD und kann einen bis wenige
+    Bits speichern. Es gibt verschiedene Typen von Cells: SLC (single level cell)
+    speichern 1 bit und sind besonders hochwertig. Sie haben die höchste Haltbartkeit
+    und bieten auch die höchste Performance. Desweiteren gibt es MlC (multiple level
+    cell), welche 2 Bits speichern kann, TLC (triple level cell), welche 3 bits
+    speichern kann und QLC (quad level cell), welche 4 Bits pro Zelle speichern kann.
+    Die Langlebigkeit und die Performance sinken dabei mit steigender Dichte je
+    Zelle.
+
+    Eine Page ist die kleinste Einheit einer SSD, die gelesen oder beschreiben
+    werden kann. Typischerweise beträgt die Größe einer Page 4KB und sie kann nur
+    einmal beschrieben werden. Das bedeutet, dass ein Update einer Page nur durch
+    das Kopieren und Modifizieren des Inhalts und anschließende schreiben auf eine
+    andere Page geschehen kann. Die alte Version der Page wir dann als invalide
+    markiert und wird zu einem späteren zeitpunkt von dem garbage collector
+    gelöscht.
+
+    Blocks stehen wiedrum eine Ebene über den Pages und stellen die kleinste Einheit
+    dar, die gelöscht werden kann. Typischerweise besteht ein Block aus 128 Pages
+    (512KB) - 256 Pages (1MB). Wenn eine Page geupdated werden soll, wird also
+    eine bearbeitete Kopie dieser Page erstellt und an anderer Stelle neu gespeichert
+    (s.o.). Schließlich wird der gesamte Block auf einen neuen (leeren) Block kopiert,
+    wobei die originale Page (welche vorher kopiert und als invalide markiert wurde)
+    gelöscht wird.
+
+
+2)  Was für einen Zweck erfüllt die garbage collection bei SSDs?
+
+    Der garbage collector ist ein Element, welches Blöcke löscht/wiedererlangt,
+    die mehr invalide pages besiten als ein gewisser threshold. Es soll dazu dienen
+    diese pages/blocks wieder nutzbar zu machen für zukünftige Lese-/Schreibvorgänge.
+    Durch den garbage collector wird allerdings die write amplification erhöht, da
+    blocks kopiert und neu geschrieben werden, wenn z.B. gar keine neuen Daten
+    abgespeichert werden. Ist der Algorithmus des garbage collectors allerdings
+    gut implementiert, kann die write amplification sogar verringert werden und es
+    wird die Performance und Lebenszeit der SSD erhöht.
+    Ähnliche/verbundene Datensegmente werden durch den garbage collector ebenfalls
+    geclustered.
+
+
+3)  Was für einen Zweck erfüllt das wear leveling bei SSDs?
+
+    Beim wear leveling werden die writes auf die SSD durch die FTL (flash translation
+    layer) auf verschiedene Blocks gleichmäßig verteilt. Dies ist sinnvoll, da
+    sich in den Blocks beim wiederholten Beschreiben und Löschen langsam eine Ladung
+    aufbaut, die es irgendwann sehr schwierig macht zwischen einer 0 und einer 1
+    zu unterscheiden. Die Blocks werden mit der Zeit also abgenutzt. Durch das möglichst
+    gleichmäßige Verteilen der writes etc. soll dem übermäßigen Abnutzen weniger Blocks
+    entgegengewirkt werden, was die allgemeine Lebenszeit einer SSD verlängert.
+    Damit alle Blocks wirklich gleichmäßig abgenutzt werden, müssen auch Daten, die
+    länger gespeichert werden sollen, regelmäßig an neue Stellen im Speicher kopiert
+    und die originale gelöscht werden. Dies erhöht allerdings die wirte amplification
+    (da so weitaus mehr Daten/Pages geschrieben werden, als eigentlich neu auf der
+    SSD gespeichert werden) und beeinfluss die Performance negativ, da mehr IO
+    stattfindet als eigentlich nötig.
+
+
+4)  Nennen sie interessante Fakten über SSDs mit einem M.2 Formfaktor.
+
+    Der M.2 Formfaktor hebt sich vor allem durch seine Kompaktheit hervor. In
+    der längsten Ausführung (2280) ist die SSD nur 80mm lang und es sind sogar noch
+    kleinere Ausmaße möglich. Oft geht mit einer M.2 SSD auch das Protokoll NVMe
+    einher, welches weitaus höhere Übertragungsraten ermöglicht als noch mit dem
+    veralteten AHCI. Wichtig ist allerdings, dass nicht alle M.2 SSDs NVMe nutzen,
+    sondern auch AHCI M.2 SSDs auf dem Markt verfügbar sind. Üblicherweise werden
+    M.2 SSDs über die PCIe Schnittstelle direkt auf dem Motherboard angeschlossen,
+    aber es gibt auch vereinzelt SATA M.2 SSDs.
+    Darüberhinaus spielen die sogenannten 'keys' noch eine wichtige Rolle bei M.2
+    SSDs. Die keys beschreiben die verschiedenen Formen/Geometrien des Interfaces
+    einer SSD. Je nach key (z.B. B key oder M key etc.) stehen verschiedene
+    Schnittstellen zur Verfügung. So ist ein B key u.A. mit PCIe, SATA und USB
+    kompatibel, der M key allerdings nicht mit USB.
+
+
+
+5)  Welchen Einfluss haben garbage collection und wear leveling auf die
+    write amplification einer SSD?
+
+    Im Allgemeinen wird die write amplification sowohl durch das wear leveling,
+    als auch durch die garbage collection erhöht. Das liegt daran, dass beide
+    Elemente regelmäßig blocks kopieren und an anderer Stelle neu schreiben,
+    um invalide pages wieder zur Verfügung zu stellen, oder um die Abnutzung der
+    blocks möglichst gleichmäßig auf alle Teile des Speichers zu veteilen.
+    Ist der Algorithmus für den garbage collector allerdings optimal implementiert,
+    kann die write amplification sogar verringert werden.
+
+
+6)  Diskutieren Sie drei unterschiedliche Empfehlungen, um Code für eine SSD zu
+    schreiben.
+
+    Um Code/Daten für SSDs zu optimieren, kann zunächst auf kompakte Datenstrukturen
+    zurückgegriffen werden. Die kleineste Einheit einer SSD, die beschrieben oder
+    gelesen werden kann, ist eine Page, welche 4KB Daten umfasst. Um den Lese-/
+    Schreibeprozess also mögichst effizient zu gestalten, sollten Daten nicht gestreut,
+    sondern möglichst kompakt in einer Datei gespeichert werden.
+    Außerdem sollte darauf geachtet werden, dass die SSD nicht voll ist, da
+    der garbage collector in diesem Fall viele Blocks kopieren und löschen muss,
+    um den restlichen Speicher angemessen zur Verfügung zu stellen. Dies erhöht die
+    write amplification stark und die Schreibgeschwindigkeit.
+    Schließlich können noch die verschiedenen Ebenen des Parallelismus der SSD
+    ausgenutzt werden. Um dies zu gewährleisten können beim IO mehrere Threads
+    arbeiten, um den höchsten Throughput zu erreichen.
+
+
+7)  Wie könnte der CPU load für großen IO reduziert werden?
+
+    Bei großem IO kann die CPU load durch asynchrone system calls verringert werden.
+    Auch das Ausschalten von OS buffering verringert die CPU load.
+
+
+8)  Wie können Sie Probleme lösen, die nicht in den RAM passen, ohne größere
+    Anpassungen des Codes?
+
+    Wenn der RAM begrenzt ist, kann die Nutzung von 'memory mapped files' aushelfen,
+    um die Probleme trotzdem zu lösen. Dabei werden Datenstrukturen, wie große
+    Arrays, nicht im RAM, sondern auf dem flash Speicher abgelegt und damit gearbeitet.
+    Die Python Bibliothek Numpy bietet so eine Lösung mit der Funktion 'numpy.memmap()',
+    welche im Grunde ein normales Python Objekt zurückgibt und alle möglichen
+    Operationen erlaubt.

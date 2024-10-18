@@ -1,0 +1,104 @@
+##    Exam Assignments 11   ##
+
+1)  Was ist Cython?
+
+    Cython ist zunächst eine eigene Programmiersprache, welche wie C/C++ kompiliert
+    wird. Es handelt sich um ein 'Superset' von Python, was bedeutet, dass in Cython
+    jedes Skript valide ist, welches auch in Python valide ist. Darüber hinaus
+    stellt Cython aber auch Möglichkeiten als Interface für C/C++ Bibliotheken
+    genutzt zu werden. So können z.B. C-Datentypen (int, double, float, char etc.)
+    klar definiert werden und helfen den Code zu beschleunigen.
+    Bei Cython wird ein .py/.pyx file intern in C Code übersetzt, welcher dann
+    in ein .so/.pyd file (je nach OS) kompiliert. Dieses sog. 'native extension
+    module' kann dann von einem Python Skript als Modul importiert und genutzt
+    werden. Ein Nachteil ist allerdings, dass die kompilierten Module nicht portabel
+    zwischen Betriebssystemen sind.
+
+
+
+2)  Beschreiben Sie einen Ansatz, wie ein Python Programm mit der Hilfe von Cython
+    beschleunigt werden kann.
+
+    Ein Python Programm kann durch die Benutzung von Cython ziemlich leicht
+    beschleunigt werden. Um Cython allerdings optimal einsetzen zu können, ist
+    es sinnvoll zunächst die Bottlenecks des Python Skripts herauszufinden und
+    an diesen Stellen gezielt anzusetzen. Als Profiler eigent sich das Programm
+    'pyinstrument', welches per Kommandozeile simpel auf das Skript angewendet
+    werden kann ($ pyinstument demo.py). So wird die Laufzeit des Programms
+    sehr transparent dargestellt und man kann schnell sehen, an welchen Stellen
+    der Code sehr ineffizient arbeitet, bzw. die meiste Zeit benötigt.
+    Diese Teile im Code lassen sich dann in eine Cython Datei als Funktion auslagern.
+    Manchmal reicht es schon aus, den Python Code einfach zu kopieren und durch
+    ein Cython File als Modul einzubinden, um eine Beschleunigung zu erzielen.
+    Dies lässt sich überprüfen, indem das neue Skript, nun mit Import der zu
+    optimierenden Funktion aus einem Cython File, erneut mit pyinstrument gebenchmarkt
+    wird. Weitere sehr einfache Optimierungen können erzielt werden, indem die
+    Datentypen in dem Cython File definiert werden (z.B. cdef int a_variable).
+    Durch diese minimale Änderung lässt sich der Code um bis zu Faktor 100 weiter
+    beschleunigen.
+    Mit der Hilfe eines Profilers kann so ein Skript iterativ optimiert werden.
+    Während des Optimierens werden vermutlich laufend neue Bottlenecks auftauchen.
+    In diesem Fall werden Anpassungen vorgenommen, bis z.B. Funktionen aus
+    Bibliotheken der limitierende Faktor werden. An diesem Punkt kann mit der
+    Verbesserung des Codes gestoppt werden.
+
+
+3)  Beschreiben Sie zwei Möglichkeiten ein .pyx Cython Modul zu kompilieren.
+
+    Zum einen lässt sich ein Cython Modul kompilieren, indem in der Konsole der
+    Befehl 'cythonize' verwendet wird. So wird der Compiler für .pyx Dateien
+    ausgeführt und die Datei wird zunächst in ein C/C++ File und schließlich in
+    ein extension Modul (.so/.pyd) kompiliert. Auf diesem Weg muss allerdings immer
+    manuell die Konsole bedient werden, sobald Änderungen an dem Cython Code
+    vorgenommen wurden.
+    Alternativ kann Cython Code 'on the fly' kompiliert werden, indem das Modul
+    'pyximport' zu Beginn des Python Skripts importiert wird und die Funktion
+    'pyximport.install()' ausgeführt wird. Durch diesen Befehl wird das .pyx
+    Modul automatisch rekompiliert und neu geladen, ohne die Konsole zwischenzuschalten.
+
+
+4)  Nenne und beschreibe zwei Kompilerdirektiven in Cython.
+
+    1. 'boundscheck': Diese Kompilerdirektive kann die Werte True oder False annehmen.
+    Wenn es False ist, so wird angenommen, dass jegliche Index Operatoren auf Listen,
+    Tuples, oder Strings (durch z.B. a_list[1]) keinen IndexError hervorrufen.
+    Sollte doch auf ungültige Speicherbereiche zugrgriffen werden, so können die
+    Daten unter Umständen korrumpiert werden.
+
+    2. 'wraparound': Kann ebenfalls True oder False sein.
+    Der Hintergrund dieser Direktive ist, dass in Python negative Indizes bei z.B.
+    Listen verwendet werden können, um Werte relativ zum Ende der Liste zu indexen
+    (z.B. a_list[-1] referenziert das letzte Element der Liste), was C nicht unterstützt.
+    Wenn 'wraparound' False ist, so werden in Cython solche Indizierungen nicht
+    überprüft und ordungsgemäß abgehandelt, was wieder z.B. Daten korrumpieren kann.
+    Es wird in diesem Fall also angenommen, dass negative Indizes nicht verwendet werden.
+
+
+5)  Was ist der Unterschied zwischen def, cdef und cpdef beim Deklarieren von
+    Cython Funktionen?
+
+    'def' deklariert eine normale Python Funktion, welcher als Argument(e) feste
+    Datentypen übergeben werden können (z.B. int, double, etc.), dies muss aber
+    nicht der Fall sein. Der Vorteil des Definierens der Datentypen ist eine
+    sichtliche Beschleunigung des Programms ohne den Code stark zu verändern.
+    In beiden Fällen werden Python Objekte zurückgegeben, sodass eine solche Funktion
+    sowohl in Python, als auch in Cython verwendet werden kann.
+    'cdef' deklariert eine Funktion, welche nur in Cython verwendet werden kann.
+    Bei dieser Deklarierung wird der Rückgabetyp der Funktion definiert (z.B.:
+    cdef int do_something():... ), wodurch solch eine Funktion nicht in einem
+    Python Skript verwendet werden kann.
+    'cpdef' hingegen deklariert eine Funktion, welche sowohl in Python, als auch
+    in Cython verwendet werden kann. Auch hier muss der Rückgabetyp der Funktion
+    definiert werden, allerdings wird erkannt, ob die Funktion in Cython, oder
+    Python aufgerufen wird und es wird je nach Sprache die passende Version der
+    Funktion erzeugt.
+
+
+6)  Wofür sind 'typed memoryviews' in Cython besonders nützlich?
+
+    Bei Typed Memoryviews werden Datentypen in Cython angegeben, um effizienter auf
+    den Speicher zuzugreifen. Bei mehrdimensionalen Daten, z.B. 2D Arrays, lassen
+    sich auch die Dimensionen direkt über eckige Klammern definieren
+    (uint64 a_2D_array[:, :]).
+    Besonders nützlich sind sie, wenn auf große Arrays, oder mehrdimensionale Arrays
+    zugegriffen werden soll.

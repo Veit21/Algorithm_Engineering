@@ -1,0 +1,62 @@
+##    Exam Assignments 12   ##
+
+1)  Was sind 'extension types'in Kontext von Python?
+
+    Extension types sind eine art Klasse, die allerdings eine erhöhte Performance
+    erreichen, da sie kommpiliert werden. Sie ähneln vom Aufbau und der Nutzung
+    sehr den normalen Python Klassen, doch sie können auch genutzt werden, um
+    z.B. C/C++ Code zu wrappen und einem Python Skript zugänglich zu machen. Es ist
+    möglich gewünschte Funktionen direkt in C zu schreiben und über einen Extension
+    type zu wrappen, doch dies benötigt ein gutes Verständnis von C und der Python/
+    C API. Indem einfach Cython für das Erstellen eines Extension types genutzt
+    wird, kann der Code leichter geschrieben werden und es wird trotzdem die
+    Performance von C Code erreicht, da Cython den Code durch das Kompilieren in
+    C Code übersetzt.
+
+
+2)  Wie unterscheiden sich 'extension types data fields' in Cython von
+    data fields in Python Klassen?
+
+    Um in Python fields für eine Klasse zu definieren reicht es aus, in dem
+    Konstruktor (def __init__(self, ...): ...) die nötigen Variablen zu erzeugen.
+    Auf diese Klassenvariablen kann dann immer sowohl lesend als auch schreibend
+    zugegriffen werden. In Python werden die fields in Form eines Dictionaries
+    gespeichert und durch einen lookup wird drauf zugegriffe, was nicht äußerst
+    effizient ist.
+    In Cython können die fields nicht so einfach in dem Konstruktor definiert werden.
+    Dort müssen zunächst (außerhalb des Konstruktors) deklariert werden, damit
+    sie im Konstruktor schließlich initialisiert werden können. Per default ist
+    der Zugriff auf die fields erstmal nur innerhalb von Cython möglich. Wenn sie
+    dennoch in Python sichtbar sein sollen, muss die 'Zugriffsberechtigung' durch
+    ein Vorstellen von 'public', oder 'readonly' geschehen. Fields in Cython
+    können ebenfalls wieder vom typ ein extension type sein.
+    Extension Fields erlangen durch diese deklarierung einen Performancegewinn,
+    da die Fields nicht in Form eines dicts gespeichert werden, sodern es wird
+    direkt eine Speicheradresse hitnerlegt, über welche der Wert der Variable
+    weitaus schneller erreicht werden kann.
+
+
+3)  Gebe eine einfache Beschreibung davon, wie man C/C++ code in Cython
+    wrapped.
+
+    Wenn man in Python schnelle C/C++ Funktionen/Bibliotheken verwenden möchte,
+    kann dies mit Hilfe von Cython einfach erreicht werden. Cython erlaubt es nämlich,
+    C/C++ Code zu wrappen und schließlich einem Pythonskript zur Verfügung zu stellen.
+    Dafür werden lediglich die .cpp & .h Dateien der Bibliothek benötigt und wenige
+    Compilerdirektiven, welche allerdings zwischen den verschiedenen Betriebssystemen
+    unterschiedlich sein können.
+    Die Direktiven sind folgende:
+    distutils: language - beschreibt welche Sprache verwendet wird (z.B. C oder C++)
+    distutils: sources - die .cpp Datei, von welcher die Funktion importiert werden soll
+    distutils: extra_compile_args - welche compiler flags verwendet werden sollen (z.B. -ffast-math -fopenmp)
+    distutils: extra_link_args - beschreibt welche weiteren Bibliotheken gelinkt werden sollen (z.B. OpenMP)
+    distutils: language_level - beschreibt welche semantik von python verwendet werden soll
+
+    Nun muss definiert werden, welche Funktion in Cython importiert werden soll. Dabei
+    muss lediglich die header Datei referenziert werden und der Name + die Argumente
+    der Funktion können praktisch aus jener .h Datei kopiert werden
+    (cdef extern "<some_file_name>.h": double <some_function_name>(int some_arg)).
+    In Cython wird schließlich eine Python Funktion definiert, welche die C/C++ Funktion
+    zurück gibt und, wie jede andere Python Funktion, in einem Python Skript aufgerufen
+    werden kann. Wie auch bei anderen Cython Funktionen, muss der Code zu Beginn des
+    Python Skriptes mit "cythonize -i" kompiliert werden.
