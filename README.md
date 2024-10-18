@@ -4,7 +4,7 @@
 This Repository allows you to import data in form of a 2D point cloud and generate new datasets while maintaining the original statistical properties. It is based on the Project [**Same Stats, Different Graphs**](https://www.autodesk.com/research/publications/same-stats-different-graphs) from Justin Matejka and George Fitzmaurice. Using the C++ programming language and modern programming techniques like vectorization, we managed to speed up the code significantly and achieved a run time of ~0.08s (@100000 iterations). For more information, see [**Generating 2D Datasets with similar statistical properties**](https://github.com/MariusWank/AlgoEngi/blob/main/Paper/paper.pdf).<br>
 This is a project for the course 'Algorithm Engineering' from Marius Wank and Veit Hucke - Friedrich-Schiller-University Jena, March 2023.
 
-<img src="data/output/example_data/simulated_annealing.gif" width="500"/>
+<img src="Project/data/output/example_data/simulated_annealing.gif" width="500"/>
 
 ## Getting started
 - [build.sh](https://github.com/MariusWank/AlgoEngi/blob/main/build.sh) is a script to build and compile the project.
